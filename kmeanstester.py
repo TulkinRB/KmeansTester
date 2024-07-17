@@ -78,7 +78,7 @@ def format_vectors(vectors, debug=False):
         ",".join("{:.4f}".format(coord) for coord in vector)
         # + ("" if not debug else ("\n" + ",".join("{}".format(coord) for coord in vector)))
         for vector in vectors
-    ) + "\n\n"
+    ) + "\n"
 
 
 def write_vectors(vectors, filename):
