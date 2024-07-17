@@ -4,6 +4,7 @@ import string
 import subprocess
 import enum
 import sys
+import os
 
 from sklearn.cluster import KMeans
 from sklearn.cluster import _kmeans
@@ -37,6 +38,7 @@ MAX_COORD_VALUE = 1000
 NUM_OF_FAILED_ALLOC_CHECKS_PER_TEST = 30
 
 valgrind_leak_regex = re.compile("All heap blocks were freed -- no leaks are possible")
+valgrind_error_regex = re.compile(re.escape("ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)"))
 
 _kmeans._tolerance = lambda X, tol: tol  # This stupid workaround is stupid
 
@@ -256,6 +258,9 @@ class TestCase:
         if valgrind_leak_regex.search(output) is None:
             print(f"\n\n{test_type}: Memory leak detected. Valgrind output:\n\n{output}")
             raise TestFailed(self)
+        if valgrind_error_regex.search(output) is None:
+            print(f"\n\n{test_type}: Error detected. Valgrind output:\n\n{output}")
+            raise TestFailed(self)
 
     def test_all(self, progress):
         if self.python:
@@ -471,6 +476,7 @@ def main():
         size = SHORT_TEST_SIZE
         print("Performing a short test:\n")
     try:
+        os.makedirs("kmeans_tester", exist_ok=True)
         print(f"\n\nPerforming {size['NUM_OF_INVALID_TESTS']} invalid input tests on Python and C code (Step 1 of 5):\n")
         perform_tests(size['NUM_OF_INVALID_TESTS'], generate_invalid_case, False, True)
 
