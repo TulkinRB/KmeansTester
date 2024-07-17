@@ -1,6 +1,10 @@
 # KmeansTester
 
 ## Instructions
+- Install the `scikit-learn` python package:
+  ```
+  python -m pip install scikit-learn
+  ```
 - place both `kmeanstester.py` and `kmeanstester.c` in the same directory as your C and Python code.
 - Add the following lines at the top of your c code:
   ```
