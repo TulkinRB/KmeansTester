@@ -189,12 +189,9 @@ class TestCase:
         else:
             if self.input_validity is InputValidity.INVALID_LENGTH:
                 expected_outputs.append(ERROR_MESSAGE)
-            elif self.input_validity is InputValidity.PRE_VECTORS_VALID:
+            else:
                 if alloc_fail:
                     expected_outputs.append(ERROR_MESSAGE)
-                else:
-                    expected_outputs.append(K_ERROR_MESSAGE)
-            else:
                 if InputValidity.K not in self.input_validity:
                     expected_outputs.append(K_ERROR_MESSAGE)
                 if InputValidity.ITER not in self.input_validity:
