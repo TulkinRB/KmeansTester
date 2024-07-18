@@ -428,13 +428,15 @@ def generate_invalid_case(full=False, python=True):
         validity |= InputValidity.K
         k = random.randint(2, vector_count - 1)
     else:
-        if random.randint(0, 2) == 0:
+        if random.randint(0, 3) == 0:
             k = random.randint(0, 10) + vector_count
             validity |= InputValidity.K_FORMAT
-        elif random.randint(0, 1) == 0:
+        elif random.randint(0, 2) == 0:
             k = random.randint(-10, 1)
         else:
             k = "".join(random.choices(string.ascii_letters + string.punctuation, k=random.randint(1, 10)))
+            if random.randint(0, 1) == 0:
+                k = str(random.randint(2, vector_count - 1)) + k
 
     if mode == 1:
         validity |= InputValidity.ITER
@@ -442,12 +444,14 @@ def generate_invalid_case(full=False, python=True):
         if random.randint(0, 10) >= 3:
             num_iter = random.randint(2, 999)
     else:
-        if random.randint(0, 2) == 0:
+        if random.randint(0, 3) == 0:
             num_iter = random.randint(1000, 1010)
-        elif random.randint(0, 1) == 0:
+        elif random.randint(0, 2) == 0:
             num_iter = random.randint(-10, 1)
         else:
             num_iter = "".join(random.choices(string.ascii_letters + string.punctuation, k=random.randint(1, 10)))
+            if random.randint(0, 1) == 0:
+                num_iter = str(random.randint(2, 999)) + num_iter
 
     return TestCase(k, num_iter, vectors, validity, full, python)
 
@@ -491,7 +495,10 @@ def main():
 
     except TestFailed as e:
         write_vectors(e.case.vectors, VECTORS_FILE_PATH)
-        print(f"\nParameters Used: k={e.case.k}, iter={e.case.num_iter}.")
+        if e.case.params is None:
+            print(f"\nParameters Used: k={e.case.k}, iter={e.case.num_iter}.")
+        else:
+            print(f"\nParameters Used: {e.case.params}")
         print(f"Input used is saved to {VECTORS_FILE_PATH}")
     else:
         print ("\nTest Complete!")
