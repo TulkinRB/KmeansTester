@@ -213,7 +213,7 @@ class TestCase:
     def validate_vector_output(self, test_type, output):
         output_lines = output.split("\n")
         fail = False
-        if len(output_lines) not in (len(self.expected_output) + 1, len(self.expected_output) + 2):
+        if len(output_lines) not in (len(self.expected_output), len(self.expected_output) + 1):
             fail = True
         try:
             for expected_vector, line in zip(self.expected_output, output_lines):
@@ -233,8 +233,6 @@ class TestCase:
             fail = True
         if output_lines[-1] != "":
             fail = True
-        if len(output_lines) == len(self.expected_output) + 2 and output_lines[-2] != "":
-            fail = True
 
         if fail:
             with open(RECEIVED_OUTPUT_FILE_PATH, "w") as f:
@@ -247,7 +245,7 @@ class TestCase:
             )
             raise TestFailed(self)
 
-        if len(output_lines) != len(self.expected_output) + 2:
+        if len(output_lines) != len(self.expected_output) + 1:
             print(f"\n\n{test_type}: Missing newline at the end of the output.")
             raise TestFailed(self)
 
